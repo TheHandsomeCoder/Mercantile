@@ -1,26 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import inventory from './constant/items.json';
+
+function inventoryList() {
+
+  return inventory.item.map(item => {
+
+    return <tr>
+      <td>{item.name}</td>
+      <td>{item.value}</td>
+      <td>{item.weight}</td>        
+    </tr>
+
+  });
+}
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Cost</th>
+          <th>Weight</th>
+        </tr>
+      </thead>
+      <tbody>
+        {inventoryList()}
+      </tbody>
+
+    </table>
+  )
 }
 
 export default App;

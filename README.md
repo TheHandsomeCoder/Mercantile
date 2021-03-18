@@ -1,3 +1,27 @@
+# Great name here
+
+### Things done
+- basic react app up and running
+-
+
+
+### Goals for today (18th March 2021)
+
+- Take existing json file as source of truth. Load only the items that are worth <=50gold.
+- Display in table with name, weight and cost fields listed. Ugly but working is fine!
+- Page load (according to Safari web tools/equivalent) takes less than 4 seconds when served from a 3rd part host.
+- Serve from netlify.
+
+### Scoped for next session
+
+- Get build time down to... _insert low number here_
+
+
+===========================================
+# here be Boiler Plate
+===========================================
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
