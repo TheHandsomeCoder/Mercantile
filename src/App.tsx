@@ -3,7 +3,9 @@ import inventory from './constant/items.json';
 
 function inventoryList() {
 
-  return inventory.item.map(item => {
+  return inventory.item
+    .filter(item => item.value && item.value <= 5000)
+    .map(item => {
 
     return <tr>
       <td>{item.name}</td>
