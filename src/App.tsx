@@ -8,8 +8,7 @@ const App: React.FC = () =>
   <Container fluid>
     <Grid divided={true}>
       <Grid.Row>
-        <Grid.Column width="8"> 
-          <InventoryTable inventory={filteredInventory} />
+        <Grid.Column width="8">          
         </Grid.Column>
         <Grid.Column width="8">
           <InventoryTable inventory={filteredInventory} />
