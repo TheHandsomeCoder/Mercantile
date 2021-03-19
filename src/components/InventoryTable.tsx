@@ -11,7 +11,7 @@ interface InventoryTableProps {
 }
 
 const InventoryTable: React.FC<InventoryTableProps> = (props) => (
-  <Table celled>
+  <Table celled fixed>
     <Table.Header>
       <Table.Row>
         <Table.HeaderCell>Name</Table.HeaderCell>
@@ -30,9 +30,9 @@ const InventoryTable: React.FC<InventoryTableProps> = (props) => (
 
 const InventoryItem = (item: InventoryItemProps) => (
     <Table.Row>
-        <Table.HeaderCell>{item.name}</Table.HeaderCell>
-        <Table.HeaderCell>{item.value}</Table.HeaderCell>
-        <Table.HeaderCell>{item.weight}</Table.HeaderCell>
+        <Table.Cell>{item.name}</Table.Cell>
+        <Table.Cell>{item.value}</Table.Cell>
+        <Table.Cell>{item.weight}</Table.Cell>
     </Table.Row>
 );
 
