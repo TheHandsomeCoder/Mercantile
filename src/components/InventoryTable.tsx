@@ -1,16 +1,17 @@
 import {Table } from 'semantic-ui-react'
+import { formatCurrency } from '../util/currency';
 
-interface InventoryItemProps {
+export interface InventoryItemProps {
     name: string,
-    weight?: number,
-    value?: number
+    value: number
+    weight: number,
 }
 
 interface InventoryTableProps {
     inventory: Array<InventoryItemProps>
 }
 
-const InventoryTable: React.FC<InventoryTableProps> = (props) => (
+export const InventoryTable: React.FC<InventoryTableProps> = (props) => (
   <Table celled fixed>
     <Table.Header>
       <Table.Row>
@@ -29,11 +30,9 @@ const InventoryTable: React.FC<InventoryTableProps> = (props) => (
 )
 
 const InventoryItem = (item: InventoryItemProps) => (
-    <Table.Row>
+    <Table.Row key={item.name}>
         <Table.Cell>{item.name}</Table.Cell>
-        <Table.Cell>{item.value}</Table.Cell>
+        <Table.Cell>{formatCurrency(item.value)}</Table.Cell>
         <Table.Cell>{item.weight}</Table.Cell>
     </Table.Row>
 );
-
-export default InventoryTable
