@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Container, Grid, Form, Menu, Input } from 'semantic-ui-react';
+import { Container, Grid, Form, Menu } from 'semantic-ui-react';
+import { EditableHeader } from './components/EditableHeader';
 import { InventoryTable, InventoryItemProps } from './components/InventoryTable';
 import inventory from './constant/items.json';
 
@@ -37,10 +38,7 @@ const App: React.FC = () => {
                 <Grid padded className="entry-form">
                   <Grid.Row>
                     <Grid.Column width="16">
-                      <h2>
-                        <Input transparent fluid value={shopName} onChange={shopNameOnChange} />
-                      </h2>
-                      
+                      <EditableHeader value={shopName} onChange={shopNameOnChange}/>
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
