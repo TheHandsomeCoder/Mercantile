@@ -1,10 +1,10 @@
 import React from "react";
-import { Header, Input, InputOnChangeData } from "semantic-ui-react";
+import { Header, Input, InputProps } from "semantic-ui-react";
 
 
 interface EditableHeaderProps {
     value: string,
-    onChange: (event: React.ChangeEvent<HTMLInputElement>, data: InputOnChangeData) => void
+    onChange: InputProps['onChange']
 }
 
 export const EditableHeader: React.FC<EditableHeaderProps> = (props) => 
