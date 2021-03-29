@@ -1,17 +1,27 @@
-import React, { ChangeEvent, useState } from 'react';
-import { Container, Grid, Form, Menu } from 'semantic-ui-react';
+import React, { ChangeEvent, SyntheticEvent, useState } from 'react';
+import { Container, Grid, Form, Menu, DropdownProps } from 'semantic-ui-react';
 import { EditableHeader } from './components/EditableHeader';
 import { InventoryTable, InventoryItemProps } from './components/InventoryTable';
 import inventory from './constant/items.json';
+import sourcebooks from './computed/sourcebooks.json';
 
-const filteredInventory = (gp: number) => inventory.item
-  .filter(item => item.value !== undefined)
-  .filter(item => item.value && item.value <= gp * 100)
-  .filter(item => item.source === 'PHB')
-  .map(i => ({ name: i.name, value: i.value, weight: i.weight } as InventoryItemProps));
+const filteredInventory = (gp: number, sourcebook?: string) => {
+  return inventory.item
+    .filter(item => item.value !== undefined)
+    .filter(item => (!sourcebook) ? item : item.source === sourcebook)
+    .filter(item => item.value && item.value <= gp * 100)
+    .filter(item => item.source === sourcebook)
+    .map(i => ({ name: i.name, value: i.value, weight: i.weight } as InventoryItemProps));
+}
 
+const sourcebooksAsOptions = Object.entries(sourcebooks).sort().map(([key, value]) => ({ key, text: value, value: key }));
 
 const App: React.FC = () => {
+  const [sourceBook, setSourceBook] = useState<string>('PHB');
+  const sourceBookOnChange = (event: SyntheticEvent, data: any) => {
+    setSourceBook(data.value);
+  };
+
   const [shopName, setShopName] = useState<string>('A Mercantile Enterprise');
   const shopNameOnChange = (event: ChangeEvent) => {
     const newValue = (event.target as HTMLInputElement).value;
@@ -38,12 +48,13 @@ const App: React.FC = () => {
                 <Grid padded className="entry-form">
                   <Grid.Row>
                     <Grid.Column width="16">
-                      <EditableHeader value={shopName} onChange={shopNameOnChange}/>
+                      <EditableHeader value={shopName} onChange={shopNameOnChange} />
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
                     <Grid.Column width="16">
                       <Form>
+                        <Form.Select label='Sourcebook' search selection onChange={sourceBookOnChange} value={sourceBook} options={sourcebooksAsOptions} />
                         <Form.Field label='Items up to (GP)' control='input' type='number' onChange={gpOnChange} value={gp} />
                       </Form>
                     </Grid.Column>
@@ -53,7 +64,7 @@ const App: React.FC = () => {
 
             </Grid.Column>
             <Grid.Column width="8">
-              <InventoryTable inventory={filteredInventory(gp)} />
+              <InventoryTable inventory={filteredInventory(gp, sourceBook)} />
             </Grid.Column>
           </Grid.Row>
 
