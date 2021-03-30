@@ -1,5 +1,5 @@
 import React, { ChangeEvent, SyntheticEvent, useState } from 'react';
-import { Container, Grid, Form, Menu, DropdownProps } from 'semantic-ui-react';
+import { Container, Grid, Form, Menu } from 'semantic-ui-react';
 import { EditableHeader } from './components/EditableHeader';
 import { InventoryTable, InventoryItemProps } from './components/InventoryTable';
 import inventory from './constant/items.json';
