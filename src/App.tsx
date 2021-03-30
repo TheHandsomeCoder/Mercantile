@@ -85,7 +85,7 @@ const App: React.FC = () => {
                           value={gp}
                         />
                         <Form.Select
-                          label="Sourcebook"
+                          label="Item Type"
                           search
                           selection
                           onChange={itemTypeOnChange}
