@@ -6,42 +6,14 @@ import { InventoryTable, InventoryItemProps } from './components/InventoryTable'
 import inventory from './computed/items.json';
 import itemTypes from './computed/itemTypes.json'
 import phb from './computed/phb.json';
+import { parseAbreviation } from './util/parser';
 
-const capitalizeFirstLetter = (s: string) => {
-  return s[0].toUpperCase() + s.slice(1);
-}
 
-// const filteredInventory = (gp: number, sourcebook: string, type: string) => {
-//   return inventory
-//     .filter(item => item.value !== undefined)
-//     .filter(item => (!sourcebook) ? item : item.source === sourcebook)
-//     .filter(item => item.value && item.value <= gp * 100)
-//     .filter(item => item.source === sourcebook)
-//     .filter(item => item.type === type)
-//     .map(i => ({ name: i.name, value: i.value, weight: i.weight } as InventoryItemProps));
-// }
-
-// const sourcebooksAsOptions = Object.entries(sourcebooks).sort().map(([key, value]) => ({ key, text: value, value: key }));
-// const sourcebooksAsOptions = [{ key, 'PHB': "Player's Handbook", value: 'PHB' }];
-//TODO: Move the capitalization to precompute
 const itemTypesMap = new Map(Object.entries(itemTypes))
 const phbMap = new Map(Object.entries(phb));
-const phbAsOptions = Object.keys(phb).sort().map((key) => ({ key, text: capitalizeFirstLetter(itemTypesMap.get(key) as string), value: key }));
-// const itemTypesAsOptions = [
-//   { key: 'A', text: capitalizeFirstLetter('Ammunition'), value: 'A' },
-//   { key: 'SCF-druid', text: capitalizeFirstLetter('Druidic Focus'), value: 'SCF-druid' },
-//   { key: 'SCF-arcane', text: capitalizeFirstLetter('Arcane Focus'), value: 'SCF-arcane' },
-//   { key: 'SCF-holy', text: capitalizeFirstLetter('Hold Focus'), value: 'SCF-holy' }
-// ]
-
-
+const phbAsOptions = Object.keys(phb).map((key) => ({ key, text: parseAbreviation(key), value: key })).sort();
 
 const App: React.FC = () => {
-  // const [sourceBook, setSourceBook] = useState<string>('PHB');
-  // const sourceBookOnChange = (event: SyntheticEvent, data: any) => {
-  //   setSourceBook(data.value);
-  // };
-
   const [shopName, setShopName] = useState<string>('A Mercantile Enterprise');
   const shopNameOnChange = (event: ChangeEvent) => {
     const newValue = (event.target as HTMLInputElement).value;
