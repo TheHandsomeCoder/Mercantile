@@ -11,7 +11,7 @@ const isSpellcastingFocus = R.propEq("type", "SCF");
 const combineSCFNameAndSCFType = R.compose(R.join("-"), R.props(["type", "scfType"]));
 const isEquipmentPack = R.both(
   R.propEq("page", 151),
-  R.propSatisfies(R.includes("pack"), "name")
+  R.propSatisfies(R.includes("Pack"), "name")
 );
 
 // Equipment Packs are considered general equipment, break them into custom category
@@ -41,3 +41,4 @@ const extractPlayerHandbookItems = (inventory) => ({
 module.exports = {
     extractPlayerHandbookItems
 }
+
