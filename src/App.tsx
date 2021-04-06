@@ -1,10 +1,11 @@
 import React, { ChangeEvent, SyntheticEvent, useState } from 'react';
-import { Container, Grid, Form, Menu } from 'semantic-ui-react';
+import { Container, Grid, Form, Menu, Dropdown } from 'semantic-ui-react';
 import { EditableHeader } from './components/EditableHeader';
+import { Inventory } from './components/Inventory';
 import { InventoryTable, InventoryItemProps } from './components/InventoryTable';
 import inventory from './computed/items.json';
 import itemTypes from './computed/itemTypes.json'
-import sourcebooks from './computed/sourcebooks.json';
+import phb from './computed/phb.json';
 
 const capitalizeFirstLetter = (s: string) => {
   return s[0].toUpperCase() + s.slice(1);
@@ -23,14 +24,15 @@ const capitalizeFirstLetter = (s: string) => {
 // const sourcebooksAsOptions = Object.entries(sourcebooks).sort().map(([key, value]) => ({ key, text: value, value: key }));
 // const sourcebooksAsOptions = [{ key, 'PHB': "Player's Handbook", value: 'PHB' }];
 //TODO: Move the capitalization to precompute
-// const itemTypesAsOptions = Object.entries(itemTypes).sort().map(([key, value]) => ({ key, text: capitalizeFirstLetter(value), value: key }));
-const itemTypesAsOptions = [
-  { key: 'AG', text: capitalizeFirstLetter('Adventuring Gear'), value: 'AG', as: "Dropdown.Divider", disabled: true},
-  { key: 'A', text: capitalizeFirstLetter('Ammunition'), value: 'A' },
-  { key: 'SCF-druid', text: capitalizeFirstLetter('Druidic Focus'), value: 'SCF-druid' },
-  { key: 'SCF-arcane', text: capitalizeFirstLetter('Arcane Focus'), value: 'SCF-arcane' },
-  { key: 'SCF-holy', text: capitalizeFirstLetter('Hold Focus'), value: 'SCF-holy' }
-]
+const itemTypesMap = new Map(Object.entries(itemTypes))
+const phbMap = new Map(Object.entries(phb));
+const phbAsOptions = Object.keys(phb).sort().map((key) => ({ key, text: capitalizeFirstLetter(itemTypesMap.get(key) as string), value: key }));
+// const itemTypesAsOptions = [
+//   { key: 'A', text: capitalizeFirstLetter('Ammunition'), value: 'A' },
+//   { key: 'SCF-druid', text: capitalizeFirstLetter('Druidic Focus'), value: 'SCF-druid' },
+//   { key: 'SCF-arcane', text: capitalizeFirstLetter('Arcane Focus'), value: 'SCF-arcane' },
+//   { key: 'SCF-holy', text: capitalizeFirstLetter('Hold Focus'), value: 'SCF-holy' }
+// ]
 
 
 
@@ -56,6 +58,10 @@ const App: React.FC = () => {
   const itemTypeOnChange = (event: SyntheticEvent, data: any) => {
     setItemType(data.value);
   };
+
+  const selectedTypesToCategories = (selectedCats: string[]) => {
+    return new Map<string, any>(selectedCats.flatMap((c) => Object.entries(phbMap.get(c) as any)));    
+  }
 
   return (
     <>
@@ -93,8 +99,8 @@ const App: React.FC = () => {
                           multiple
                           onChange={itemTypeOnChange}
                           value={itemType}
-                          options={itemTypesAsOptions}
-                        />
+                          options={phbAsOptions}
+                        />                                            
                       </Form>
                     </Grid.Column>
                   </Grid.Row>
@@ -102,7 +108,7 @@ const App: React.FC = () => {
               </div>
             </Grid.Column>
             <Grid.Column width="8">
-              {/* <InventoryTable inventory={filteredInventory(gp, sourceBook, itemType)} /> */}
+              <Inventory categories={selectedTypesToCategories(itemType)} /> 
             </Grid.Column>
           </Grid.Row>
         </Grid>
