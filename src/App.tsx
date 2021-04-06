@@ -1,20 +1,15 @@
 import React, { ChangeEvent, SyntheticEvent, useState } from 'react';
-import { Container, Grid, Form, Menu, Dropdown } from 'semantic-ui-react';
+import { Container, Grid, Form, Menu } from 'semantic-ui-react';
 import { EditableHeader } from './components/EditableHeader';
 import { Inventory } from './components/Inventory';
-import { InventoryTable, InventoryItemProps } from './components/InventoryTable';
-import inventory from './computed/items.json';
-import itemTypes from './computed/itemTypes.json'
 import phb from './computed/phb.json';
 import { parseAbreviation } from './util/parser';
 
-
-const itemTypesMap = new Map(Object.entries(itemTypes))
 const phbMap = new Map(Object.entries(phb));
 const phbAsOptions = Object.keys(phb).map((key) => ({ key, text: parseAbreviation(key), value: key })).sort();
 
 const App: React.FC = () => {
-  const [shopName, setShopName] = useState<string>('A Mercantile Enterprise');
+  const [shopName, setShopName] = useState<string>('Players Handbook Gear');
   const shopNameOnChange = (event: ChangeEvent) => {
     const newValue = (event.target as HTMLInputElement).value;
     setShopName(newValue);
