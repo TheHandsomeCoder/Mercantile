@@ -1,7 +1,6 @@
 import React from "react";
 import { Header } from "semantic-ui-react";
 import { InventoryItemProps, InventoryTable } from "./InventoryTable";
-import itemTypes from '../computed/itemTypes.json'
 import { parseAbreviation } from "../util/parser";
 
 interface InventoryProps {
