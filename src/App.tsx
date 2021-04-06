@@ -1,36 +1,18 @@
-import React, { ChangeEvent, SyntheticEvent, useState } from 'react';
-import { Container, Grid, Form, Menu } from 'semantic-ui-react';
-import { EditableHeader } from './components/EditableHeader';
-import { InventoryTable, InventoryItemProps } from './components/InventoryTable';
-import inventory from './computed/items.json';
-import sourcebooks from './computed/sourcebooks.json';
-import itemTypes from './computed/itemTypes.json'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { ChangeEvent, SyntheticEvent, useState } from "react";
+import { Container, Grid, Form, Menu } from "semantic-ui-react";
+import { EditableHeader } from "./components/EditableHeader";
+import { Inventory } from "./components/Inventory";
+import phb from "./computed/phb.json";
+import { parseAbreviation } from "./util/parser";
 
-const capitalizeFirstLetter = (s: string) => {
-  return s[0].toUpperCase() + s.slice(1);
-}
-
-const filteredInventory = (gp: number, sourcebook: string, type: string) => {
-  return inventory
-    .filter(item => item.value !== undefined)
-    .filter(item => (!sourcebook) ? item : item.source === sourcebook)
-    .filter(item => item.value && item.value <= gp * 100)
-    .filter(item => item.source === sourcebook)
-    .filter(item => item.type === type)
-    .map(i => ({ name: i.name, value: i.value, weight: i.weight } as InventoryItemProps));
-}
-
-const sourcebooksAsOptions = Object.entries(sourcebooks).sort().map(([key, value]) => ({ key, text: value, value: key }));
-//TODO: Move the capitalization to precompute
-const itemTypesAsOptions = Object.entries(itemTypes).sort().map(([key, value]) => ({ key, text: capitalizeFirstLetter(value), value: key }));
+const phbMap = new Map(Object.entries(phb));
+const phbAsOptions = Object.keys(phb)
+  .map((key) => ({ key, text: parseAbreviation(key), value: key }))
+  .sort();
 
 const App: React.FC = () => {
-  const [sourceBook, setSourceBook] = useState<string>('PHB');
-  const sourceBookOnChange = (event: SyntheticEvent, data: any) => {
-    setSourceBook(data.value);
-  };
-
-  const [shopName, setShopName] = useState<string>('A Mercantile Enterprise');
+  const [shopName, setShopName] = useState<string>("Players Handbook Gear");
   const shopNameOnChange = (event: ChangeEvent) => {
     const newValue = (event.target as HTMLInputElement).value;
     setShopName(newValue);
@@ -42,9 +24,13 @@ const App: React.FC = () => {
     setGp(Number(newValue));
   };
 
-  const [itemType, setItemType] = useState<string>('G');
+  const [itemType, setItemType] = useState<string[]>([]);
   const itemTypeOnChange = (event: SyntheticEvent, data: any) => {
     setItemType(data.value);
+  };
+
+  const selectedTypesToCategories = (selectedCats: string[]) => {
+    return new Map<string, any>(selectedCats.flatMap((c) => Object.entries(phbMap.get(c) as any)));
   };
 
   return (
@@ -60,38 +46,22 @@ const App: React.FC = () => {
                 <Grid padded className="entry-form">
                   <Grid.Row>
                     <Grid.Column width="16">
-                      <EditableHeader
-                        value={shopName}
-                        onChange={shopNameOnChange}
-                      />
+                      <EditableHeader value={shopName} onChange={shopNameOnChange} />
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
                     <Grid.Column width="16">
                       <Form>
                         <Form.Select
-                          label="Sourcebook"
-                          search
-                          selection
-                          onChange={sourceBookOnChange}
-                          value={sourceBook}
-                          options={sourcebooksAsOptions}
-                        />
-                        <Form.Field
-                          label="Items up to (GP)"
-                          control="input"
-                          type="number"
-                          onChange={gpOnChange}
-                          value={gp}
-                        />
-                        <Form.Select
                           label="Item Type"
                           search
                           selection
+                          multiple
                           onChange={itemTypeOnChange}
                           value={itemType}
-                          options={itemTypesAsOptions}
+                          options={phbAsOptions}
                         />
+                        <Form.Field label="Items up to (GP)" control="input" type="number" onChange={gpOnChange} value={gp} />
                       </Form>
                     </Grid.Column>
                   </Grid.Row>
@@ -99,14 +69,13 @@ const App: React.FC = () => {
               </div>
             </Grid.Column>
             <Grid.Column width="8">
-              <InventoryTable inventory={filteredInventory(gp, sourceBook, itemType)} />
+              <Inventory categories={selectedTypesToCategories(itemType)} gpFilter={gp} />
             </Grid.Column>
           </Grid.Row>
         </Grid>
       </Container>
     </>
   );
-}
-
+};
 
 export default App;
