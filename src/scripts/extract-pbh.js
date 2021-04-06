@@ -6,9 +6,10 @@ const weaponTypes = new Set(["M", "R"]);
 
 const isPHB = R.propEq("source", "PHB");
 const isAdventureGear = (i) => adventuringGearTypes.has(i.type);
-const isPHBAndIsAdventureGear = R.filter(R.both(isPHB, isAdventureGear));
+const hasValueGTEOneCP = R.propSatisfies(R.gte(R.__,1), "value");
+const isPHBAndIsAdventureGearAndValueGTOne = R.filter(R.allPass([isPHB, isAdventureGear, hasValueGTEOneCP]));
 const isSpellcastingFocus = R.propEq("type", "SCF");
-const combineSCFNameAndSCFType = R.compose(R.join("-"), R.props(["type", "scfType"]));
+const combineSCFNameAndSCFType = R.compose((s) => s.toUpperCase(),R.join("-"), R.props(["scfType", "type"]));
 const isEquipmentPack = R.both(
   R.propEq("page", 151),
   R.propSatisfies(R.includes("Pack"), "name")
@@ -19,6 +20,11 @@ const extractEquipmentPacksToOwnCategory = R.map(
   R.when(isEquipmentPack, R.evolve({'type': R.always("EP")}))
 );
 
+const extractOtherAdventuringGearToOwnCategory = R.map(
+  R.when(R.propEq('type', 'G'), R.evolve({'type': R.always("OAG")}))
+);
+
+
 const groupAdventureGearByType = R.groupBy(
   R.cond([
     [isSpellcastingFocus, combineSCFNameAndSCFType],
@@ -28,14 +34,24 @@ const groupAdventureGearByType = R.groupBy(
 
 
 const extractAdventuringGear = R.pipe(
-  isPHBAndIsAdventureGear,
+  isPHBAndIsAdventureGearAndValueGTOne,
+  R.reject(isEquipmentPack),
+  extractOtherAdventuringGearToOwnCategory,
+  R.sortBy(R.prop("type")),
+  groupAdventureGearByType,
+  (data) => Object.fromEntries(Object.entries(data).sort())
+);
+
+const extractEquipmentPacks = R.pipe(
+  isPHBAndIsAdventureGearAndValueGTOne,
+  R.filter(isEquipmentPack),
   extractEquipmentPacksToOwnCategory,
   groupAdventureGearByType
 );
 
-
 const extractPlayerHandbookItems = (inventory) => ({
-    'G': extractAdventuringGear(inventory)
+    'G': extractAdventuringGear(inventory),
+    'EP': extractEquipmentPacks(inventory)
 });
 
 module.exports = {
