@@ -68,7 +68,7 @@ const App: React.FC = () => {
               </div>
             </Grid.Column>
             <Grid.Column width="8">
-              <Inventory categories={selectedTypesToCategories(itemType)} />
+              <Inventory categories={selectedTypesToCategories(itemType)} gpFilter={gp} />
             </Grid.Column>
           </Grid.Row>
         </Grid>

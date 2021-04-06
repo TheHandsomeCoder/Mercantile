@@ -5,25 +5,32 @@ import itemTypes from '../computed/itemTypes.json'
 import { parseAbreviation } from "../util/parser";
 
 interface InventoryProps {
+  gpFilter: number,
   categories: Map<string, Array<InventoryItemProps>>;
 }
 
 interface InventoryTableWithHeaderProps {
     header: string,
+    gpFilter: number,
     items: Array<InventoryItemProps>
 }
 
-const InventoryTableWithHeader: React.FC<InventoryTableWithHeaderProps> = (props) => {
+const FilteredInventoryTableWithHeader: React.FC<InventoryTableWithHeaderProps> = (props) => {
+    const filteredInventory = props.items.filter(i => i.value <= props.gpFilter * 100)
+    if(filteredInventory.length === 0) {
+      return null;
+    }
+
     return (<>
         <Header as="h2">{props.header}</Header>
-        <InventoryTable inventory={props.items} />
+        <InventoryTable inventory={filteredInventory}/>
     </>)
 }
 
 export const Inventory: React.FC<InventoryProps> = (props) => (
   <>
     {Array.from(props.categories.entries()).map(([headerKey, items]) => (
-      <InventoryTableWithHeader header={parseAbreviation(headerKey)} items={items} />
+      <FilteredInventoryTableWithHeader header={parseAbreviation(headerKey)} items={items} gpFilter={props.gpFilter}/>
     ))}
   </>
 );
