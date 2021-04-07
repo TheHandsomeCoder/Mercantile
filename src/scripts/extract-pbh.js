@@ -6,6 +6,7 @@ const weaponTypes = new Set(["M", "R"]);
 
 const isPHB = R.propEq("source", "PHB");
 const isAdventureGear = (i) => adventuringGearTypes.has(i.type);
+const isArmorOrShield = (i) => armorTypes.has(i.type);
 const hasValueGTEOneCP = R.propSatisfies(R.gte(R.__,1), "value");
 const isPHBAndIsAdventureGearAndValueGTOne = R.filter(R.allPass([isPHB, isAdventureGear, hasValueGTEOneCP]));
 const isSpellcastingFocus = R.propEq("type", "SCF");
@@ -49,9 +50,17 @@ const extractEquipmentPacks = R.pipe(
   groupAdventureGearByType
 );
 
+const extractArmorAndShields = R.pipe(
+  R.filter(isPHB),
+  R.filter(isArmorOrShield),
+  groupAdventureGearByType,
+  (data) => Object.fromEntries(Array.from(armorTypes.keys()).map(k => [k, data[k]]))
+);
+
 const extractPlayerHandbookItems = (inventory) => ({
     'G': extractAdventuringGear(inventory),
-    'EP': extractEquipmentPacks(inventory)
+    'ARM': extractArmorAndShields(inventory),
+    'EP': extractEquipmentPacks(inventory),
 });
 
 module.exports = {
