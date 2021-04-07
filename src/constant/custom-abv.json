@@ -4,5 +4,10 @@
     "HOLY-SCF": "Holy Spellcasting Focus",
     "EP": "Equipment Pack",
     "OAG": "Other Adventuring Gear",
-    "ARM": "Armor"    
+    "ARM": "Armor",
+    "W": "Weapons",
+    "SIMPLE-M": "Simple Melee Weapons",
+    "SIMPLE-R": "Simple Ranged Weapons",
+    "MARTIAL-M": "Martial Melee Weapons",
+    "MARTIAL-R": "Martial Ranged Weapons"
 }
