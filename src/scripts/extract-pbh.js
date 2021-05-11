@@ -61,7 +61,7 @@ const extractRemainingPHBGear = R.pipe(
   R.reject(R.anyPass([isAdventureGear, isTreasure, isWeapon, isArmorOrShield])),
   groupGearByTypeAndSubType,
   (obj) => {
-    const newMap = Object.entries(obj).map(([k, v]) => [k, {[k]: v}]);
+    const newMap = Object.entries(obj).map(([k, v]) => [k, { [k]: v }]);
 
     return Object.fromEntries(newMap);
   }
