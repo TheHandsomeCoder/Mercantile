@@ -1,4 +1,5 @@
-require("../static/parser.js");
+require('../static/parser');
+
 const baseItems = require('../constant/baseItems.json');
 const items = require('../constant/items.json');
 const fs = require('fs');
