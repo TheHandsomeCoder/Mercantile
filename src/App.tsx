@@ -11,7 +11,15 @@ const phbAsOptions = Object.keys(phb)
   .map((key) => ({ key, text: parseAbreviation(key), value: key }))
   .sort();
 
+interface Merchant {
+  name: string;
+  gpFilter: number;
+  categories: string[];
+}
+
 const App: React.FC = () => {
+  const [stores, setStores] = useState<Array<Merchant>>([]);
+
   const [shopName, setShopName] = useState<string>("Players Handbook Gear");
   const shopNameOnChange = (event: ChangeEvent) => {
     const newValue = (event.target as HTMLInputElement).value;
